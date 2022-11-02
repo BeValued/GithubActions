@@ -1,7 +1,12 @@
 on: 
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled]
-
+  workflow_call:
+    inputs:
+      label-name:
+        required: true
+        type: string
+        
 jobs:
   bevalued_label_checker:
     runs-on: ubuntu-latest
@@ -15,4 +20,4 @@ jobs:
         uses: ./ # Uses an action in the root directory
         id: labelCheck
         with:
-          label-name: 'Passed QA Testing'
+          label-name: ${{ inputs.label-name }}
