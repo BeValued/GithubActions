@@ -18,9 +18,9 @@ try {
     core.info('Current labels applied to this PR: ');
 
     github.context.payload.pull_request.labels.forEach(label => {
-        core.info(label);
+        core.info(label.name);
 
-        if (label === labelName) {
+        if (label.name === labelName) {
             core.info('Labels match!');
             hasLabel = true;
         }
