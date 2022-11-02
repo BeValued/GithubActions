@@ -3,7 +3,7 @@ on:
     types: [opened, synchronize, reopened, labeled, unlabeled]
 
 jobs:
-  hello_world_job:
+  bevalued_label_checker:
     runs-on: ubuntu-latest
     name: BeValued Label Checker
     steps:
