@@ -6,16 +6,30 @@ try {
     const labelName = core.getInput('label-name');
 
     core.info('labelName required is: ' + labelName);
-
-    const context = github.context.payload;
-
-    console.log('eventName:' + github.context.eventName);
-
-    console.log(JSON.stringify(github.context));
     
     // Get the JSON webhook payload for the event that triggered the workflow
-    const payload = JSON.stringify(github.context.payload, undefined, 2)
-    console.log(`The event payload: ${payload}`);
+
+    let hasLabel = false;
+
+    //if (github.context.payload.pull_request.labels.every(l=>l!==labelName)) {
+    //    core.setFailed("This PR does not have the label: " + labelName);
+    //}
+
+    core.info('Current labels applied to this PR: ');
+
+    github.context.payload.pull_request.labels.forEach(label => {
+        core.info(label.name);
+
+        if (label.name === labelName) {
+            core.info('Labels match!');
+            hasLabel = true;
+        }
+    });
+
+    if (!hasLabel) {
+        core.setFailed("This PR does not have the label: " + labelName);
+    }
+
 } catch (error) {
     core.setFailed(error.message);
 }

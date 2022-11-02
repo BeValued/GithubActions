@@ -9689,13 +9689,33 @@ const github = __nccwpck_require__(7377);
 
 try {
     // `who-to-greet` input defined in action metadata file
-    const nameToGreet = core.getInput('who-to-greet');
-    console.log(`Hello ${nameToGreet}!`);
-    const time = (new Date()).toTimeString();
-    core.setOutput("time", time);
+    const labelName = core.getInput('label-name');
+
+    core.info('labelName required is: ' + labelName);
+    
     // Get the JSON webhook payload for the event that triggered the workflow
-    const payload = JSON.stringify(github.context.payload, undefined, 2)
-    console.log(`The event payload: ${payload}`);
+
+    let hasLabel = false;
+
+    //if (github.context.payload.pull_request.labels.every(l=>l!==labelName)) {
+    //    core.setFailed("This PR does not have the label: " + labelName);
+    //}
+
+    core.info('Current labels applied to this PR: ');
+
+    github.context.payload.pull_request.labels.forEach(label => {
+        core.info(label.name);
+
+        if (label.name === labelName) {
+            core.info('Labels match!');
+            hasLabel = true;
+        }
+    });
+
+    if (!hasLabel) {
+        core.setFailed("This PR does not have the label: " + labelName);
+    }
+
 } catch (error) {
     core.setFailed(error.message);
 }
