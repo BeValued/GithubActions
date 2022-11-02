@@ -1,5 +1,5 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'BeValued Label Checker'
+description: 'Check for a label on a Pull Request. Default is "Passed QA Testing"'
 branding:
   color: green
   icon: smile

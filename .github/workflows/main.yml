@@ -3,17 +3,14 @@ on: [push]
 jobs:
   hello_world_job:
     runs-on: ubuntu-latest
-    name: A job to say hello
+    name: BeValued Label Checker
     steps:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Hello world action step
+      - name: BeValued Label Checker
         uses: ./ # Uses an action in the root directory
-        id: hello
+        id: labelCheck
         with:
-          who-to-greet: 'Ben Elliott'
-      # Use the output from the `hello` step
-      - name: Get the output time
-        run: echo "The time was ${{ steps.hello.outputs.time }}"
+          label-name: 'Passed QA Testing'
