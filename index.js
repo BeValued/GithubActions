@@ -11,11 +11,10 @@ try {
 
     if (github.context.payload.pull_request.labels.every(l => l.name !== labelName)) {
         core.setFailed("This PR does not have the label: " + labelName);
+    } else {
+        console.log('Auto Merge is:' + github.context.payload.pull_request.auto_merge);
+        github.context.payload.pull_request.auto_merge = true;
     }
-
-    github.context.payload.pull_request.auto_merge = true;
-
-
 } catch (error) {
     core.setFailed(error.message);
 }
