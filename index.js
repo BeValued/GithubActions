@@ -13,6 +13,8 @@ try {
         core.setFailed("This PR does not have the label: " + labelName);
     }
 
+    github.context.payload.pull_request.auto_merge = true;
+
 
 } catch (error) {
     core.setFailed(error.message);
