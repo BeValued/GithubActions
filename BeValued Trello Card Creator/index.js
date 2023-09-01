@@ -45,7 +45,7 @@ async function run() {
 
         core.info("Has label and is not on trello - continuing");
 
-        const addCardResponse = await addCardToList(pr.title);
+        const addCardResponse = await addCardToList(pr.title,pr.body);
 
         checkStatus(addCardResponse);
 
@@ -81,7 +81,7 @@ async function run() {
     }
 }
 
-async function addCardToList(cardName) {
+async function addCardToList(cardName, description) {
 
     //https://developer.atlassian.com/cloud/trello/rest/api-group-cards/#api-cards-post
         // This code sample uses the 'node-fetch' library:
@@ -89,7 +89,7 @@ async function addCardToList(cardName) {
 
     core.info("Adding card to Trello: " + cardName);
 
-    return await fetch('https://api.trello.com/1/cards?idList=' + trelloListId + '&key=' + trelloApiKey + '&token=' + trelloAuthToken + '&name=' + cardName, {
+    return await fetch('https://api.trello.com/1/cards?idList=' + trelloListId + '&key=' + trelloApiKey + '&token=' + trelloAuthToken + '&name=' + cardName + '&desc=' + description, {
         method: 'POST',
         headers: {
             'Accept': 'application/json'
