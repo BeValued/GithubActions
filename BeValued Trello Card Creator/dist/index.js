@@ -9711,6 +9711,8 @@ async function run() {
 
     try {
 
+        core.info(pr);
+
         core.info('labelName required is: ' + labelName);
 
         const pr = github.context.payload.pull_request;
