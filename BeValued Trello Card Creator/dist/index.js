@@ -18349,11 +18349,11 @@ async function addCardToList(cardName, description) {
 
     core.info(description);
 
-    htmlMarkdown.NodeHtmlMarkdown.translate(description);
+   var markdown =  htmlMarkdown.NodeHtmlMarkdown.translate(description);
 
-    core.info(description);
+    core.info(markdown);
 
-    return await fetch('https://api.trello.com/1/cards?idList=' + trelloListId + '&key=' + trelloApiKey + '&token=' + trelloAuthToken + '&name=' + cardName + '&desc=' + description, {
+    return await fetch('https://api.trello.com/1/cards?idList=' + trelloListId + '&key=' + trelloApiKey + '&token=' + trelloAuthToken + '&name=' + cardName + '&desc=' + markdown, {
         method: 'POST',
         headers: {
             'Accept': 'application/json'
