@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const fetch = require('node-fetch');
+const htmlMarkdown = require('node-html-markdown');
 
 const trelloApiKey = core.getInput('trello-api-key', { required: true })
 const trelloAuthToken = core.getInput('trello-auth-token', { required: true })
@@ -88,6 +89,12 @@ async function addCardToList(cardName, description) {
         // https://www.npmjs.com/package/node-fetch
 
     core.info("Adding card to Trello: " + cardName);
+
+    core.info(description);
+
+    htmlMarkdown.NodeHtmlMarkdown.translate(description);
+
+    core.info(description);
 
     return await fetch('https://api.trello.com/1/cards?idList=' + trelloListId + '&key=' + trelloApiKey + '&token=' + trelloAuthToken + '&name=' + cardName + '&desc=' + description, {
         method: 'POST',
