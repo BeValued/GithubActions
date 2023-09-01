@@ -9715,8 +9715,6 @@ async function run() {
 
         const pr = github.context.payload.pull_request;
 
-        core.info(pr);
-
         // Get the JSON webhook payload for the event that triggered the workflow
 
         core.info("Checking Label");
@@ -9739,7 +9737,7 @@ async function run() {
 
         const cardData = await addCardResponse.json();
 
-        const addAttachmentResponse = await addAttachmentToCard(cardData.id);
+        const addAttachmentResponse = await addAttachmentToCard(cardData.id, pr.url);
 
         checkStatus(addAttachmentResponse);
 
