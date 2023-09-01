@@ -31,6 +31,8 @@ async function run() {
 
         // Get the JSON webhook payload for the event that triggered the workflow
 
+        core.info("Checking Label");
+
         if (pr.labels.every(l => l.name !== labelName)) {
             core.info("This PR does not have the label: " + labelName);
             return;
@@ -41,6 +43,7 @@ async function run() {
             return;
         }
 
+        core.info("Has label and is not on trello - continuing");
 
         const addCardResponse = await addCardToList(pr.title);
 
@@ -84,6 +87,8 @@ async function addCardToList(cardName) {
         // This code sample uses the 'node-fetch' library:
         // https://www.npmjs.com/package/node-fetch
 
+    core.info("Adding card to Trello: " + cardName);
+
     return await fetch('https://api.trello.com/1/cards?idList=' + trelloListId + '&key=' + trelloApiKey + '&token=' + trelloAuthToken + '&name=' + cardName, {
         method: 'POST',
         headers: {
@@ -93,6 +98,9 @@ async function addCardToList(cardName) {
 }
 
 async function addAttachmentToCard(cardId,url) {
+
+    core.info('Adding attachment ' + url + ' to card: ' + cardId);
+
 
     //https://developer.atlassian.com/cloud/trello/rest/api-group-cards/#api-cards-post
         // This code sample uses the 'node-fetch' library:
@@ -109,6 +117,7 @@ async function addAttachmentToCard(cardId,url) {
 function checkStatus(response) {
     if (response.ok) {
         // response.status >= 200 && response.status < 300
+        core.info('response OK');
         return response;
     } else {
         throw new Error(`HTTP Error Response: ${response.status} ${response.statusText}`);
@@ -116,6 +125,9 @@ function checkStatus(response) {
 }
 
 async function addLabelToPr(issueNumber) {
+
+    core.info('Adding label to PR' + issueNumber);
+
 
     return await octokit.rest.issues.addLabels({
         owner: owner,
