@@ -51,7 +51,7 @@ async function run() {
 
         const cardData = await addCardResponse.json();
 
-        const addAttachmentResponse = await addAttachmentToCard(cardData.id, pr.url);
+        const addAttachmentResponse = await addAttachmentToCard(cardData.id, pr.html_url);
 
         checkStatus(addAttachmentResponse);
 
