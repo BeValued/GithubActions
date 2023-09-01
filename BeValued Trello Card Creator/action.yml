@@ -1,0 +1,37 @@
+name: 'BeValued Trello Card Creator'
+description: 'Check for a label on a Pull Request and create trello card if it doesn''t exist'
+branding:
+  color: green
+  icon: smile
+inputs:
+  label-name:  # id of input
+    description: 'The label required'
+    required: true
+    default: 'dependencies'
+  trello-api-key:  # id of input
+    description: 'Trello Api Key'
+    required: true
+    default: ''
+  trello-auth-token:  # id of input
+    description: 'Trello Auth Token'
+    required: true
+    default: ''
+  trello-list-id:  # id of input
+    description: 'Trello List Id'
+    required: true
+    default: ''
+  github-token:  # id of input
+    description: 'Github Auth Token'
+    required: true
+    default: ''
+  owner:  # id of input
+    description: 'Repo owner'
+    required: true
+    default: ''
+  repo:  # id of input
+    description: 'Repo'
+    required: true
+    default: ''
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
