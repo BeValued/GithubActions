@@ -1,0 +1,19 @@
+name: BeValued Trello Card Creator
+on: 
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  trello-card:
+    environment: main   
+    runs-on: ubuntu-latest
+    steps:
+      - uses: BeValued/GithubActions/BeValued Trello Card Creator/@main
+        with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            label-name: dependencies
+            trello-api-key: ${{ secrets.TRELLO_API_KEY }}
+            trello-auth-token: ${{ secrets.TRELLO_AUTH_TOKEN }}
+            trello-list-id: 592d3c82d5d9c35bc132ff4a
+            owner: BeValued
+            repo: ClaimsCompanion
