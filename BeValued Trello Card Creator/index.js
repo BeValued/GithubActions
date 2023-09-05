@@ -87,6 +87,8 @@ async function getTrelloLabelIds(trelloLabels) {
         }
     });
 
+    checkStatus(boardLabelData);
+
     core.info(JSON.stringify(boardLabelData));
 
     return boardLabelData.filter(b => trelloLabels.includes(b.name)).map(b => b.id);
