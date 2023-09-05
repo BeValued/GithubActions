@@ -53,6 +53,7 @@ async function run() {
 
         if (trelloLabels !== null ?? trelloLabels.length > 0) {
             labelIds = await getTrelloLabelIds(trelloLabels);
+            core.info('labelIds: ' + labelIds);
         }
 
         const addCardResponse = await addCardToList(pr.title, pr.body, labelIds);
@@ -77,6 +78,8 @@ async function run() {
 
 async function getTrelloLabelIds(trelloLabels) {
 
+    core.info('Finding label ids:' + trelloLabels.toString());
+
     const boardLabelData = await fetch('https://api.trello.com/1/boards/' + trelloBoardId + '/labels?key=' + trelloApiKey + '&token=' + trelloAuthToken);
 
     return boardLabelData.filter(b => trelloLabels.includes(b.name)).map(b => b.id);
@@ -92,6 +95,8 @@ async function addCardToList(cardName, description, labelIds) {
     core.info("Adding card to Trello: " + cardName);
 
     core.info(description);
+
+    core.info(labelIds);
 
     var markdown = htmlMarkdown.NodeHtmlMarkdown.translate(description);
 
