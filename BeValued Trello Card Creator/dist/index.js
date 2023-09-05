@@ -18339,6 +18339,8 @@ async function getTrelloLabelIds(trelloLabels) {
 
     const boardLabelData = await fetch('https://api.trello.com/1/boards/' + trelloBoardId + '/labels?key=' + trelloApiKey + '&token=' + trelloAuthToken);
 
+    core.info(boardLabelData);
+
     return boardLabelData.filter(b => trelloLabels.includes(b.name)).map(b => b.id);
 
 }
