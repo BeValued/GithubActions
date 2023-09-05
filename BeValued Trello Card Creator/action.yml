@@ -20,6 +20,14 @@ inputs:
     description: 'Trello List Id'
     required: true
     default: ''
+  trello-board-id:  # id of input
+    description: 'Trello Board Id'
+    required: true
+    default: ''
+  trello-labels:  # id of input
+    description: 'Comma separated list of label names'
+    required: false
+    default: ''
   github-token:  # id of input
     description: 'Github Auth Token'
     required: true

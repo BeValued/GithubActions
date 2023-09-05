@@ -3,13 +3,15 @@ const github = require('@actions/github');
 const fetch = require('node-fetch');
 const htmlMarkdown = require('node-html-markdown');
 
-const trelloApiKey = core.getInput('trello-api-key', { required: true })
-const trelloAuthToken = core.getInput('trello-auth-token', { required: true })
-const trelloListId = core.getInput('trello-list-id', { required: true })
+const trelloApiKey = core.getInput('trello-api-key', { required: true });
+const trelloAuthToken = core.getInput('trello-auth-token', { required: true });
+const trelloListId = core.getInput('trello-list-id', { required: true });
+const trelloBoardId = core.getInput('trello-board-id', { required: true });
+const trelloLabels = core.getInput('trello-labels')?.split(',');
 
-const githubToken = core.getInput('github-token', { required: true })
-const owner = core.getInput('owner', { required: true })
-const repo = core.getInput('repo', { required: true })
+const githubToken = core.getInput('github-token', { required: true });
+const owner = core.getInput('owner', { required: true });
+const repo = core.getInput('repo', { required: true });
 
 const labelName = core.getInput('label-name');
 
@@ -46,9 +48,17 @@ async function run() {
 
         core.info("Has label and is not on trello - continuing");
 
-        const addCardResponse = await addCardToList(pr.title,pr.body);
+
+        const labelIds = [];
+
+        if (trelloLabels !== null ?? trelloLabels.length > 0) {
+            labelIds = await getTrelloLabelIds(trelloLabels);
+        }
+
+        const addCardResponse = await addCardToList(pr.title, pr.body, labelIds);
 
         checkStatus(addCardResponse);
+
 
         const cardData = await addCardResponse.json();
 
@@ -60,43 +70,34 @@ async function run() {
 
         await addLabelToPr(pr.number);
 
-
-        //fetch('https://api.trello.com/1/cards?idList=' + trelloListId + '&key=' + trelloApiKey + '&token=' + trelloAuthToken, {
-        //    method: 'POST',
-        //    headers: {
-        //        'Accept': 'application/json'
-        //    }
-        //})
-        //    .then(response => {
-        //        console.log(
-        //            `Response: ${response.status} ${response.statusText}`
-        //        );
-        //        return response.text();
-        //    })
-        //    .then(text => console.log(text))
-        //    .catch(err => console.error(err));
-
-
     } catch (error) {
         core.setFailed(error.message);
     }
 }
 
-async function addCardToList(cardName, description) {
+async function getTrelloLabelIds(trelloLabels) {
+
+    const boardLabelData = await fetch('https://api.trello.com/1/boards/' + trelloBoardId + '/labels?key=' + trelloApiKey + '&token=' + trelloAuthToken);
+
+    return boardLabelData.filter(b => trelloLabels.includes(b.name)).map(b => b.id);
+
+}
+
+async function addCardToList(cardName, description, labelIds) {
 
     //https://developer.atlassian.com/cloud/trello/rest/api-group-cards/#api-cards-post
-        // This code sample uses the 'node-fetch' library:
-        // https://www.npmjs.com/package/node-fetch
+    // This code sample uses the 'node-fetch' library:
+    // https://www.npmjs.com/package/node-fetch
 
     core.info("Adding card to Trello: " + cardName);
 
     core.info(description);
 
-   var markdown =  htmlMarkdown.NodeHtmlMarkdown.translate(description);
+    var markdown = htmlMarkdown.NodeHtmlMarkdown.translate(description);
 
     core.info(markdown);
 
-    return await fetch('https://api.trello.com/1/cards?idList=' + trelloListId + '&key=' + trelloApiKey + '&token=' + trelloAuthToken + '&name=' + encodeURIComponent(cardName) + '&desc=' + encodeURIComponent(markdown), {
+    return await fetch('https://api.trello.com/1/cards?idList=' + trelloListId + '&key=' + trelloApiKey + '&token=' + trelloAuthToken + '&name=' + encodeURIComponent(cardName) + '&desc=' + encodeURIComponent(markdown) + '&idLabels=' + labelIds.toString(), {
         method: 'POST',
         headers: {
             'Accept': 'application/json'
@@ -104,14 +105,14 @@ async function addCardToList(cardName, description) {
     });
 }
 
-async function addAttachmentToCard(cardId,url) {
+async function addAttachmentToCard(cardId, url) {
 
     core.info('Adding attachment ' + url + ' to card: ' + cardId);
 
 
     //https://developer.atlassian.com/cloud/trello/rest/api-group-cards/#api-cards-post
-        // This code sample uses the 'node-fetch' library:
-        // https://www.npmjs.com/package/node-fetch
+    // This code sample uses the 'node-fetch' library:
+    // https://www.npmjs.com/package/node-fetch
 
     return await fetch('https://api.trello.com/1/cards/' + cardId + '/attachments?key=' + trelloApiKey + '&token=' + trelloAuthToken + '&url=' + url, {
         method: 'POST',
