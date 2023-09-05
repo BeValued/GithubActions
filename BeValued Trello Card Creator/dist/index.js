@@ -18348,7 +18348,7 @@ async function getTrelloLabelIds(trelloLabels) {
 
     const labelData = await boardLabelResponse.json();
 
-    core.info(labelData);
+    core.info(JSON.stringify(labelData));
 
     return labelData.filter(b => trelloLabels.includes(b.name)).map(b => b.id);
 
