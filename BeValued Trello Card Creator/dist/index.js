@@ -18306,7 +18306,7 @@ async function run() {
         core.info("Has label and is not on trello - continuing");
 
 
-        const labelIds = [];
+        let labelIds = [];
 
         if (trelloLabels !== null ?? trelloLabels.length > 0) {
             labelIds = await getTrelloLabelIds(trelloLabels);
