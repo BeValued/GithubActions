@@ -80,9 +80,14 @@ async function getTrelloLabelIds(trelloLabels) {
 
     core.info('Finding label ids:' + trelloLabels.toString());
 
-    const boardLabelData = await fetch('https://api.trello.com/1/boards/' + trelloBoardId + '/labels?key=' + trelloApiKey + '&token=' + trelloAuthToken);
+    const boardLabelData = await fetch('https://api.trello.com/1/boards/' + trelloBoardId + '/labels?key=' + trelloApiKey + '&token=' + trelloAuthToken, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    });
 
-    core.info(boardLabelData);
+    core.info(JSON.stringify(boardLabelData));
 
     return boardLabelData.filter(b => trelloLabels.includes(b.name)).map(b => b.id);
 
